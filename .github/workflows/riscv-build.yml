@@ -28,7 +28,7 @@ jobs:
       # 4. 使用 QEMU 模拟运行生成的二进制文件
       - name: Run in Simulation
         run: |
-          qemu-riscv64 ./hello_riscv
+          qemu-riscv64 -L /usr/riscv64-linux-gnu ./hello_riscv
 
       # 5. 保存编译好的文件到 GitHub 页面供下载
       - name: Save Artifacts
