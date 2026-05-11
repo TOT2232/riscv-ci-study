@@ -1,0 +1,38 @@
+name: RISC-V Build and Emulation
+
+# 触发条件：代码推送或手动点击运行
+on: 
+  push:
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest  
+    steps:
+      # 1. 把仓库里的代码拉取到云服务器上
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. 安装交叉编译器和 QEMU 模拟器
+      - name: Install Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-riscv64-linux-gnu qemu-user
+
+      # 3. 执行交叉编译
+      - name: Compile for RISC-V
+        run: |
+          riscv64-linux-gnu-gcc hello_lpi4a.c -o hello_riscv
+          echo "Build Complete!"
+
+      # 4. 使用 QEMU 模拟运行生成的二进制文件
+      - name: Run in Simulation
+        run: |
+          qemu-riscv64 ./hello_riscv
+
+      # 5. 保存编译好的文件到 GitHub 页面供下载
+      - name: Save Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: riscv-binary
+          path: hello_riscv
