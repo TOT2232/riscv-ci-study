@@ -1,0 +1,22 @@
+name: Daily Health Check  
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # 北京时间早上 6 点执行
+  workflow_dispatch:     
+
+jobs:
+  environment-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check RISC-V GCC Version
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-riscv64-linux-gnu
+          echo "Current Toolchain Version:"
+          riscv64-linux-gnu-gcc --version
+          
+      - name: System Report
+        run: |
+          echo "Run Date: $(date)"
+          echo "Runner Architecture: $(uname -m)"
